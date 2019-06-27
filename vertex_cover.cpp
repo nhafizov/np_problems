@@ -68,6 +68,3 @@ int main() {
         std::cout << elem + 1 << " ";
     }
 }
-
-
-
