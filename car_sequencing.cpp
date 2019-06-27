@@ -12,7 +12,7 @@ struct robot {
     size_t window_capacity = 0; // сколько не более чем это число автомобилей могут содержать опцию i
     size_t window_size = 0; // размер окна робота (т.е. сколько автомобилей попадают в окно этого робота)
 
-    robot() {}
+    default robot() {}
 };
 
 size_t get_integer_random(size_t N) {
@@ -54,7 +54,7 @@ get_full_sequence_error(const std::vector<std::vector<size_t>> &car_type, const 
 // подаем ему на вход сначала старую последовательность с указанием индексов, а потом новую
 long long
 get_part_sequence_error(const std::vector<std::vector<size_t>> &car_type, const std::vector<size_t> &car_sequence,
-                        const std::vector<robot> &robots, long long old_value, size_t index1, size_t index2) {
+                        const std::vector<robot> &robots) {
     long long func_value = 0;
     for (size_t i = 0; i != robots.size(); ++i) {// для всех роботов
         size_t window = robots[i].window_size; // смотрим на размер окна i-го робота
@@ -250,12 +250,12 @@ int main() {
     }
     // само решение
     // инициализация отжог
-//    double temperature = std::sqrt(N);
-//    double temperature_save = temperature;
-//    double alpha = 0.999985;
-//    double stopping_temperature = 1e-8;
-//    size_t stopping_iteration = 200;
-//    size_t iteration = 0;
+    double temperature = std::sqrt(N);
+    double temperature_save = temperature;
+    double alpha = 0.999985;
+    double stopping_temperature = 1e-8;
+    size_t stopping_iteration = 200;
+    size_t iteration = 0;
 //    // лучшее решение
     std::vector<size_t> best_solution;
     // первое решение жадным
@@ -265,8 +265,8 @@ int main() {
     best_solution = cur_solution;
     auto best_err = cur_err;
     // дальше будем пытаться его улучшить
-//    while (static_cast<double>(clock() - _start) / CLOCKS_PER_SEC < 5.6 && temperature >= stopping_temperature) {
-    while (static_cast<double>(clock() - _start) / CLOCKS_PER_SEC < 5.9) {
+    while (static_cast<double>(clock() - _start) / CLOCKS_PER_SEC < 5.6 && temperature >= stopping_temperature) {
+//    while (static_cast<double>(clock() - _start) / CLOCKS_PER_SEC < 5.9) {
         // ищем новое решение
         size_t car1 = 0;
         size_t car2 = 0;
@@ -287,14 +287,14 @@ int main() {
                 best_solution = potential_sol;
             }
         }
-//        else {
-//            if (get_double_random() < get_probability(cur_err, potential_dist, temperature)) {
-//                cur_err = potential_dist;
-//                cur_solution = potential_sol;
-//            }
-//        }
-//        temperature *= alpha;
-//        iteration += 1;
+        else {
+            if (get_double_random() < get_probability(cur_err, potential_dist, temperature)) {
+                cur_err = potential_dist;
+                cur_solution = potential_sol;
+            }
+        }
+        temperature *= alpha;
+        iteration += 1;
     }
     std::cout << best_err << "\n";
     for (auto elem : best_solution) std::cout << elem << " ";
